@@ -3,17 +3,15 @@ import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_community.vectorstores import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import FakeEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
 load_dotenv()
 
-embeddings = HuggingFaceEmbeddings(
-    model_name="all-MiniLM-L6-v2",
-    model_kwargs={"device": "cpu"}
-)
+# Use FakeEmbeddings that matches the dimension of all-MiniLM-L6-v2 (384)
+embeddings = FakeEmbeddings(size=384)
 
 vectorstore = Chroma(
     persist_directory="chroma_db",
@@ -62,3 +60,17 @@ def ask(question: str):
     sources = retriever.invoke(question)
     answer = chain.invoke(question)
     return answer, sources
+```
+
+Also update `backend/requirements.txt` on GitHub — remove `sentence-transformers` and `langchain-huggingface`:
+```
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain-groq
+langchain-text-splitters
+langchain-core
+chromadb
+pypdf
+python-dotenv
