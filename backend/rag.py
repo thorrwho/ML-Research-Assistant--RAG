@@ -60,17 +60,3 @@ def ask(question: str):
     sources = retriever.invoke(question)
     answer = chain.invoke(question)
     return answer, sources
-```
-
-Also update `backend/requirements.txt` on GitHub — remove `sentence-transformers` and `langchain-huggingface`:
-```
-fastapi
-uvicorn
-langchain
-langchain-community
-langchain-groq
-langchain-text-splitters
-langchain-core
-chromadb
-pypdf
-python-dotenv
