@@ -89,7 +89,7 @@ export default function App() {
     setMessages(prev => [...prev, { role: "user", content: question }]);
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/ask", {
+      const res = await fetch("https://rag-backend-s39b.onrender.com/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
