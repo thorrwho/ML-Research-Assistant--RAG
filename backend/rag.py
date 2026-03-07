@@ -3,14 +3,13 @@ import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import FakeEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+from langchain_community.embeddings import FakeEmbeddings
 
 load_dotenv()
 
-# Use FakeEmbeddings that matches the dimension of all-MiniLM-L6-v2 (384)
 embeddings = FakeEmbeddings(size=384)
 
 vectorstore = Chroma(
@@ -20,13 +19,10 @@ vectorstore = Chroma(
 
 retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
-PROMPT_TEMPLATE = """You are a helpful assistant. Answer the question using ONLY 
-the information provided in the context below. 
-
-If the answer is not in the context, say exactly: 
-"I couldn't find that in the provided documents."
-
-Do not make up information. Be concise and accurate.
+PROMPT_TEMPLATE = """You are a helpful assistant. Here are some document chunks that may or may not be relevant.
+Use them to answer the question as best you can.
+Even if the context seems unrelated, try to extract any useful information from it.
+If there is truly nothing useful, say "I couldn't find that in the provided documents."
 
 Context:
 {context}
